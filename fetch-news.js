@@ -56,6 +56,16 @@ async function run() {
     body: JSON.stringify({ message: lineMessage }),
   })
 
+  const res = await fetch(WORKER_URL, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message: lineMessage }),
+})
+
+const text = await res.text()
+console.log('推播結果:', res.status, text)
+
+
   console.log('推播結果:', res.status)
 }
 
