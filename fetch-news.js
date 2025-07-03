@@ -5,8 +5,12 @@ const parser = new Parser();
 const WORKER_URL = process.env.WORKER_URL || 'https://line-news-pusher.stonersheart.workers.dev';
 
 const rssFeeds = [
-  { category: '總覽', url: 'https://www.ettoday.net/news/rss' },
+  {
+    category: '總覽',
+    url: 'https://rss-proxy.stonersheart.workers.dev/?url=https://www.ettoday.net/news/news-feed/rss2.xml'
+  },
 ];
+
 
 const keywordsByCategory = {
   股市: ['股價', '大盤', '指數', '法人', '收盤', '台股', '上市', '證交所'],
