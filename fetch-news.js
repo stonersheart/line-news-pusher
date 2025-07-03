@@ -16,6 +16,8 @@ const FEEDS = {
   基金: 'https://tw.stock.yahoo.com/rss?category=funds-news',
 };
 
+const category = '新聞'; // ✅ 可改為其他分類
+
 async function fetchNews(category = '新聞') {
   const url = FEEDS[category];
   const res = await fetch(url, {
@@ -26,6 +28,10 @@ async function fetchNews(category = '新聞') {
   const xml = await res.text();
 
   const items = Array.from(xml.matchAll(/<item>(.*?)<\/item>/gs)).slice(0, 3);
+  if (!items.length) {
+    return '⚠️ 無法解析新聞內容（RSS 為空或格式異常）';
+  }
+
   const articles = items.map(item => {
     const title = item[1].match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1] ||
                   item[1].match(/<title>(.*?)<\/title>/)?.[1] || '無標題';
@@ -36,21 +42,35 @@ async function fetchNews(category = '新聞') {
   return articles.join('\n\n');
 }
 
-const WORKER_URL = process.env.WORKER_URL;
+// ✅ LINE credentials from GitHub Secrets
+const LINE_TOKEN = process.env.LINE_TOKEN;
+const LINE_USER_ID = process.env.LINE_USER_ID;
 
 (async () => {
-  const newsText = await fetchNews("新聞"); // 可改為其他類別
-  const res = await fetch(WORKER_URL, {
+  const newsText = await fetchNews(category);
+
+  const res = await fetch('https://api.line.me/v2/bot/message/push', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: `新聞\n${newsText}` })
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${LINE_TOKEN}`
+    },
+    body: JSON.stringify({
+      to: LINE_USER_ID,
+      messages: [
+        {
+          type: 'text',
+          text: `【${category}新聞】\n${newsText}`
+        }
+      ]
+    })
   });
 
   if (!res.ok) {
-    console.error(`❌ Failed to send message. Status: ${res.status}`);
+    console.error(`❌ LINE 推播失敗，狀態碼: ${res.status}`);
     const errorText = await res.text();
     console.error(errorText);
   } else {
-    console.log("✅ News sent successfully");
+    console.log("✅ 成功推播每日新聞");
   }
 })();
