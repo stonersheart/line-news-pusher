@@ -1,4 +1,4 @@
-const WORKER_URL = process.env.WORKER_URL || 'https://你的worker子網域.workers.dev';
+const WORKER_URL = process.env.WORKER_URL || 'https://line-news-pusher.stonersheart.workers.dev';
 
 const category = '新聞';  // 可改為 "科技"、"財經" 等
 
