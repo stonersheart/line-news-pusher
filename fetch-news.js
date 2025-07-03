@@ -1,8 +1,9 @@
 const FEEDS = {
-  新聞: 'https://rss-proxy.stonersheart.workers.dev/?url=https://tw.news.yahoo.com/rss/',
+  即時新聞: 'https://rss-proxy.stonersheart.workers.dev/?url=http://tw.news.yahoo.com/rss/realtime',
+  // 可視需要補上其他分類
 };
 
-async function fetchNews(category = '新聞') {
+async function fetchNews(category = '即時新聞') {
   const url = FEEDS[category];
   const res = await fetch(url);
   const xml = await res.text();
@@ -21,11 +22,11 @@ async function fetchNews(category = '新聞') {
 const WORKER_URL = process.env.WORKER_URL;
 
 (async () => {
-  const newsText = await fetchNews();
+  const newsText = await fetchNews();  // 預設即時新聞
   const res = await fetch(WORKER_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: '新聞' })
+    body: JSON.stringify({ message: '即時新聞' }) // 請求類別
   });
 
   if (!res.ok) {
@@ -36,4 +37,3 @@ const WORKER_URL = process.env.WORKER_URL;
     console.log("✅ News sent successfully");
   }
 })();
-
