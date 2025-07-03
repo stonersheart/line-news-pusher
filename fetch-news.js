@@ -36,3 +36,4 @@ const WORKER_URL = process.env.WORKER_URL;
     console.log("✅ News sent successfully");
   }
 })();
+
