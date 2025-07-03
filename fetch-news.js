@@ -5,7 +5,7 @@ const parser = new Parser();
 const WORKER_URL = process.env.WORKER_URL || 'https://line-news-pusher.stonersheart.workers.dev';
 
 const rssFeeds = [
-  { category: '總覽', url: 'https://www.ettoday.net/news/news-feed/rss2.xml' },
+  { category: '總覽', url: 'https://www.ettoday.net/news/rss' },
 ];
 
 const keywordsByCategory = {
