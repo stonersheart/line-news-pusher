@@ -4,6 +4,6 @@
   "type": "module",
   "dependencies": {
     "rss-parser": "^3.12.0",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^3.3.2"
   }
 }
